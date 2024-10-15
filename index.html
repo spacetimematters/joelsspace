@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
@@ -18,6 +18,8 @@
             min-height: 100vh;
             margin: 0;
             font-size: 16px; /* Increase font size to prevent zooming */
+            position: relative; /* Make body relative to position overlay */
+            overflow: hidden; /* Prevent scrollbars from appearing */
         }
 
         .demo-box {
@@ -26,12 +28,14 @@
             width: 400px;
             height: 300px;
             text-align: left;
-            background-color: rgba(0, 0, 0, 1);
+            background-color: rgba(0, 0, 0, 0.7);
             overflow-y: auto;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             margin-top: 20px;
             margin-left: 20px;
             padding: 10px;
+            position: relative; /* Keep stacking context for demo box */
+            z-index: 2; /* Ensure it appears above the video */
         }
 
         #header, #subheader {
@@ -82,184 +86,175 @@
             50% { border-right-color: #2a892a; }
         }
 
-        .help-text {
-            color: #2a892a;
+        /* Styles for the overlay video */
+        .overlay-video {
+            position: absolute; /* Position it absolutely within the body */
+            top: 0;
+            left: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            object-fit: cover; /* Cover the entire area */
+            z-index: 1; /* Place it behind the demo box */
+            mix-blend-mode: multiply; /* Apply multiply blend mode */
+            pointer-events: none; /* Disable pointer events on the video */
         }
     </style>
 </head>
 <body>
 
-<div class="demo-box">
-    <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader"></div>
-    <div id="outputArea"></div>
-    <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
-</div>
+    <!-- Overlay video -->
+    <video autoplay muted loop class="overlay-video">
+        <source src="cyber-crime-computer-hacker-screen-1-2023-11-27-04-58-42-utc.mov" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
-<script>
-    const loadingText = "LOADING";
-    const outputArea = document.getElementById("outputArea");
-    const demoText = document.getElementById("demoText");
-    const subheader = document.getElementById("subheader");
-    const audio = new Audio();
-    const startupAudio = new Audio("startup.wav");
-    const backgroundAudio = new Audio("hard_drive.wav");
-    const typingSound = new Audio("add5323c450fe7758cce9197142dcbb7.mp3"); // Updated audio file
+    <div class="demo-box">
+        <div id="header">LullSoft Version 1.0.130</div>
+        <div id="subheader"></div>
+        <div id="outputArea"></div>
+        <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
+    </div>
 
-    backgroundAudio.volume = 0.1;
-    backgroundAudio.loop = true;
-    let isLoading = true;
-    let isAudioPaused = false; // Track audio pause state
+    <script>
+        const loadingText = "LOADING";
+        const outputArea = document.getElementById("outputArea");
+        const demoText = document.getElementById("demoText");
+        const subheader = document.getElementById("subheader");
+        const audio = new Audio();
+        const startupAudio = new Audio("startup.wav");
+        const backgroundAudio = new Audio("hard_drive.wav");
 
-    function fadeOutAudio(audio) {
-        let fadeInterval = setInterval(() => {
-            if (audio.volume > 0.01) {
-                audio.volume -= 0.01;
-            } else {
-                clearInterval(fadeInterval);
+        backgroundAudio.volume = 0.1;
+        backgroundAudio.loop = true;
+        let isLoading = true;
+
+        function fadeOutAudio(audio) {
+            let fadeInterval = setInterval(() => {
+                if (audio.volume > 0.01) {
+                    audio.volume -= 0.01;
+                } else {
+                    clearInterval(fadeInterval);
+                    audio.pause();
+                }
+            }, 100);
+        }
+
+        function loadingAnimation() {
+            let dots = "";
+            let dotCount = 0;
+            const interval = setInterval(() => {
+                dots = dotCount < 3 ? dots + "." : "";
+                dotCount = (dotCount + 1) % 4;
+                outputArea.textContent = `${loadingText}${dots}`;
+            }, 500);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                outputArea.textContent = ""; 
+                displaySuccessMessage(); 
+            }, 3000);
+        }
+
+        function displaySuccessMessage() {
+            outputArea.textContent = "Success!";
+            isLoading = false;
+            addPrompt();
+            startupAudio.play();
+            startupAudio.addEventListener('ended', () => backgroundAudio.play());
+            setTimeout(() => fadeOutAudio(backgroundAudio), 10000);
+            typeSubheader();
+        }
+
+        function typeSubheader() {
+            const text = "Created by joel";
+            let index = 0;
+
+            const typingInterval = setInterval(() => {
+                if (index < text.length) {
+                    subheader.textContent += text.charAt(index);
+                    index++;
+                } else {
+                    clearInterval(typingInterval);
+                }
+            }, 100);
+        }
+
+        function addPrompt() {
+            outputArea.textContent += ""; 
+            placeCaretAtEnd(demoText);
+        }
+
+        function placeCaretAtEnd(el) {
+            el.focus();
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+
+        function handleKey(event) {
+            if (isLoading) {
+                event.preventDefault();
+                return;
+            }
+
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const command = demoText.textContent.trim();
+
+                if (command) {
+                    outputArea.textContent = command; 
+                    processCommand(command);
+                    demoText.textContent = ""; // Clear the input box
+                    addPrompt();
+                }
+            }
+        }
+
+        function processCommand(command) {
+            if (command.startsWith("play")) {
+                selectSong(command.split(" ").slice(1).join(" "));
+            } else if (command.startsWith("select ")) {
+                selectSong(command.slice(7));
+            } else if (command === "pause") {
                 audio.pause();
-            }
-        }, 100);
-    }
-
-    function loadingAnimation() {
-        let dots = "";
-        let dotCount = 0;
-        const interval = setInterval(() => {
-            dots = dotCount < 3 ? dots + "." : "";
-            dotCount = (dotCount + 1) % 4;
-            outputArea.textContent = `${loadingText}${dots}`;
-        }, 500);
-
-        setTimeout(() => {
-            clearInterval(interval);
-            outputArea.textContent = ""; 
-            displaySuccessMessage(); 
-        }, 3000);
-    }
-
-    function displaySuccessMessage() {
-        outputArea.textContent = "Success!";
-        isLoading = false;
-        addPrompt();
-        startupAudio.play();
-        startupAudio.addEventListener('ended', () => backgroundAudio.play());
-        setTimeout(() => fadeOutAudio(backgroundAudio), 10000);
-        typeSubheader();
-    }
-
-    function typeSubheader() {
-        const text = "Created by joel";
-        let index = 0;
-
-        const typingInterval = setInterval(() => {
-            if (index < text.length) {
-                subheader.textContent += text.charAt(index);
-                index++;
+                outputArea.textContent = "Paused: " + audio.src.split("/").pop();
+            } else if (command === "help") {
+                displayHelp();
             } else {
-                clearInterval(typingInterval);
-            }
-        }, 100);
-    }
-
-    function addPrompt() {
-        outputArea.textContent += ""; 
-        placeCaretAtEnd(demoText);
-    }
-
-    function placeCaretAtEnd(el) {
-        el.focus();
-        const range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-    }
-
-    function handleKey(event) {
-        if (isLoading) {
-            event.preventDefault();
-            return;
-        }
-
-        playTypingSound(); // Play typing sound for every key press
-
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const command = demoText.textContent.trim();
-
-            if (command) {
-                outputArea.textContent = command; 
-                processCommand(command);
-                demoText.textContent = ""; // Clear the input box
-                addPrompt();
+                outputArea.textContent = `'${command}' is not recognized as an internal or external command.`;
             }
         }
-    }
 
-    function playTypingSound() {
-        typingSound.currentTime = 0; // Reset audio to start
-        typingSound.play().catch(error => {
-            console.error("Error playing typing sound:", error);
-        }); // Play typing sound
-    }
-
-    function processCommand(command) {
-        if (command.startsWith("play")) {
-            selectSong(command.split(" ").slice(1).join(" "));
-        } else if (command.startsWith("select ")) {
-            selectSong(command.slice(7));
-        } else if (command === "pause") {
-            audio.pause();
-            isAudioPaused = true; // Set the paused state
-            outputArea.textContent = "Paused: " + audio.src.split("/").pop();
-        } else if (command === "resume") {
-            if (isAudioPaused) {
+        function selectSong(songName) {
+            const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience", "dark"];
+            if (validSongs.includes(songName)) {
+                audio.src = songName + ".mp3";
                 audio.play().then(() => {
-                    outputArea.textContent = "Resumed: " + audio.src.split("/").pop();
-                    isAudioPaused = false; // Reset the paused state
+                    outputArea.textContent = "Playing: " + songName;
+                    backgroundAudio.pause();
                 }).catch(error => {
-                    outputArea.textContent = "Error resuming audio: " + error.message;
+                    outputArea.textContent = "Error playing audio: " + error.message;
                 });
             } else {
-                outputArea.textContent = "Audio is already playing.";
+                outputArea.textContent = "Please specify a valid song name.";
             }
-        } else if (command === "help") {
-            displayHelp();
-        } else {
-            outputArea.textContent = `'${command}' is not recognized as an internal or external command.`;
         }
-    }
 
-    function selectSong(songName) {
-        const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience", "dark"];
-        if (validSongs.includes(songName)) {
-            audio.src = songName + ".mp3";
-            audio.play().then(() => {
-                outputArea.textContent = "Playing: " + songName;
-                backgroundAudio.pause();
-            }).catch(error => {
-                outputArea.textContent = "Error playing audio: " + error.message;
-            });
-        } else {
-            outputArea.textContent = "Please specify a valid song name.";
+        function displayHelp() {
+            outputArea.innerHTML = 
+                `<div class="help-text">
+                    <strong>Commands:</strong>
+                    <code>play</code>, <code>pause</code>, <code>select [song name]</code><br><br>
+                    <strong>Songs:</strong>
+                    <code>home, ohwell, cemetery, uncomfortable, ambience, dark</code>
+                </div>`;
         }
-    }
 
-    function displayHelp() {
-        outputArea.innerHTML = 
-            `<div class="help-text">
-                <strong>Commands:</strong>
-                <code>play</code>, <code>pause</code>, <code>resume</code>, <code>select [song name]</code><br><br>
-                <strong>Songs:</strong>
-                <code>home, ohwell, cemetery, swiffle, uncomfortable, ambience, dark</code>
-            </div>`;
-    }
-
-    // Start loading animation when the page loads
-    window.onload = loadingAnimation;
-</script>
+        loadingAnimation();
+    </script>
 
 </body>
 </html>
