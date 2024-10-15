@@ -85,8 +85,8 @@
 <body>
 
 <div class="demo-box">
-    <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader">Created by Space/J</div> <!-- Added subheader for 'Created by Space/J' -->
+    <div id="header">LullSoft Version 1.0.152</div>
+    <div id="subheader"></div> <!-- Added subheader for 'Created by Space/J' -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -95,6 +95,7 @@
     const loadingText = "LOADING";
     const outputArea = document.getElementById("outputArea");
     const demoText = document.getElementById("demoText");
+    const subheader = document.getElementById("subheader");
     const audio = new Audio();
     const startupAudio = new Audio("startup.wav"); // Startup audio file
     const backgroundAudio = new Audio("hard drive.wav"); // Background audio file
@@ -142,6 +143,22 @@
         startupAudio.play(); // Play startup sound effect
         backgroundAudio.play(); // Start playing background audio after loading
         setTimeout(() => fadeOutAudio(backgroundAudio), 10000); // Trigger fade out after 10 seconds
+        typeSubheader(); // Start typing the subheader after success message
+    }
+
+    function typeSubheader() {
+        const text = "Created by Space/J";
+        let index = 0;
+        subheader.textContent = ""; // Clear the subheader
+
+        const typingInterval = setInterval(() => {
+            if (index < text.length) {
+                subheader.textContent += text.charAt(index); // Add one character at a time
+                index++;
+            } else {
+                clearInterval(typingInterval); // Clear interval when done typing
+            }
+        }, 100); // Typing speed
     }
 
     function addPrompt() {
