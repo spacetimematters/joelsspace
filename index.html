@@ -40,8 +40,14 @@
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
-            border-right: 2px solid; /* Add caret effect */
-            animation: blink-caret 0.75s step-end infinite; /* Blinking caret effect */
+        }
+
+        #header {
+            animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
+        }
+
+        #subheader {
+            animation: typing 2s steps(30, end) 2s; /* Delayed typing for subheader */
         }
 
         #outputArea {
@@ -81,7 +87,7 @@
 
 <div class="demo-box">
     <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader"></div> <!-- Moved subheader here for visibility -->
+    <div id="subheader">Created by joel</div> <!-- Moved subheader here for visibility -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -99,6 +105,7 @@
     backgroundAudio.loop = true; // Loop the background music
     let isLoading = true;
 
+    // Function to fade out background audio after 10 seconds
     function fadeOutAudio(audio) {
         let fadeInterval = setInterval(() => {
             if (audio.volume > 0.01) {
@@ -147,20 +154,15 @@
         const text = "Created by joel";
         let index = 0;
         subheader.textContent = ""; // Clear the subheader
-        subheader.style.animation = 'none'; // Reset animation
-        subheader.offsetHeight; // Trigger reflow to restart animation
 
-        // Start typing the subheader after a short delay
-        setTimeout(() => {
-            const typingInterval = setInterval(() => {
-                if (index < text.length) {
-                    subheader.textContent += text.charAt(index); // Add one character at a time
-                    index++;
-                } else {
-                    clearInterval(typingInterval); // Clear interval when done typing
-                }
-            }, 100); // Typing speed
-        }, 2000); // Delay before starting the subheader typing
+        const typingInterval = setInterval(() => {
+            if (index < text.length) {
+                subheader.textContent += text.charAt(index); // Add one character at a time
+                index++;
+            } else {
+                clearInterval(typingInterval); // Clear interval when done typing
+            }
+        }, 100); // Typing speed
     }
 
     function addPrompt() {
@@ -231,11 +233,17 @@
                 outputArea.textContent = "Error playing audio"; // Error message if play fails
             });
         } else {
-            outputArea.textContent = `'${songName}' is not a recognized song.`; // Error message for unknown songs
+            outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
         }
     }
 
-    loadingAnimation(); // Start loading animation
+    function adjustHeight() {
+        demoText.style.height = 'auto';
+        demoText.style.height = demoText.scrollHeight + 'px';
+    }
+
+    loadingAnimation();
 </script>
+
 </body>
 </html>
