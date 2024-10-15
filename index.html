@@ -47,7 +47,6 @@
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
-            animation: typing 2s steps(30, end) 2s; /* Delayed typing for subheader */
         }
 
         #outputArea {
@@ -89,7 +88,7 @@
 
 <div class="demo-box">
     <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader">Created by joel</div> <!-- Added subheader for 'Created by Space/J' -->
+    <div id="subheader"></div> <!-- Keep subheader empty initially -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -214,6 +213,8 @@
                 } else if (command === "pause") {
                     audio.pause();
                     outputArea.textContent = "Paused: " + audio.src.split("/").pop(); // Display pause message
+                } else if (command === "songlist") { // Check for songlist command
+                    outputArea.textContent = "Available songs: swiffle, home, ohwell, cemetery, uncomfortable, ambience"; // List songs
                 } else if (command !== "play") { // Only display error for unknown commands
                     outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`; // Display command error
                 }
@@ -247,5 +248,4 @@
     loadingAnimation();
 </script>
 
-</body>
-</html>
+</
