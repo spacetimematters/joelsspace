@@ -208,7 +208,7 @@
                     audio.pause();
                     outputArea.textContent = "Paused: " + audio.src.split("/").pop(); // Display pause message
                 } else if (command === "songlist") { // Check for songlist command
-                    outputArea.textContent = "Available songs: swiffle, home, ohwell, cemetery, uncomfortable, ambience"; // List songs
+                    outputArea.textContent = "Available songs: home, ohwell, cemetery, uncomfortable, ambience"; // List songs
                 } else if (command !== "play") { // Only display error for unknown commands
                     outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`; // Display command error
                 }
