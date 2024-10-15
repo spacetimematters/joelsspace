@@ -89,7 +89,7 @@
 
 <div class="demo-box">
     <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader">Created by joel</div> <!-- Moved subheader here for visibility -->
+    <div id="subheader"></div> <!-- Moved subheader here for visibility -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -239,4 +239,4 @@
                 outputArea.textContent = "Error playing audio"; // Error message if play fails
             });
         } else {
-            outputArea.textContent = "Please specify a valid song name."; // Prompt for
+            outputArea.textContent = "Please specify a valid song name."; // Prompt for invalid
