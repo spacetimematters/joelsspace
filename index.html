@@ -1,97 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joel's Space</title>
-    <style>
-        body {
-            background-color: black;
-            background-image: url('background.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #2a892a;
-            font-family: 'Inconsolata', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            margin: 0;
-            font-size: 11px;
-        }
-
-        .demo-box {
-            border: 2px solid #2a892a;
-            font-size: inherit;
-            width: 400px;
-            height: 300px;
-            text-align: left;
-            background-color: rgba(0, 0, 0, 0.7);
-            overflow-y: auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            margin-top: 20px;
-            margin-left: 20px;
-            padding: 10px;
-        }
-
-        #header, #subheader {
-            font-size: 11px;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        #header {
-            animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
-        }
-
-        #subheader {
-            animation: typing 2s steps(30, end) 2s;
-        }
-
-        #outputArea {
-            margin-bottom: 0;
-        }
-
-        #demoText {
-            background-color: black;
-            color: #2a892a;
-            border: none;
-            width: 100%;
-            padding: 0;
-            outline: none;
-            font-weight: 200;
-            resize: none;
-            overflow: hidden;
-            caret-color: #2a892a;
-            font-size: inherit;
-        }
-
-        #demoText:focus {
-            outline: none;
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-right-color: transparent; }
-            50% { border-right-color: #2a892a; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="demo-box">
-    <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader"></div>
-    <div id="outputArea"></div>
-    <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
-</div>
-
 <script>
     const loadingText = "LOADING";
     const outputArea = document.getElementById("outputArea");
@@ -228,20 +134,22 @@
     }
 
     function displayHelp() {
-        outputArea.textContent = `
-            Syntax:
-            - play
-            - pause
-            - resume
-            - select [song name]
-            
-            Choices:
-            - home
-            - ohwell
-            - cemetery
-            - uncomfortable
-            - ambience
-            - dark
+        outputArea.innerHTML = `
+            <strong>Syntax:</strong><br>
+            <code>play</code> - Play a song<br>
+            <code>pause</code> - Pause the currently playing song<br>
+            <code>resume</code> - Resume the paused song<br>
+            <code>select [song name]</code> - Select and play a specific song<br><br>
+
+            <strong>Available Songs:</strong><br>
+            <ul>
+                <li><code>home</code></li>
+                <li><code>ohwell</code></li>
+                <li><code>cemetery</code></li>
+                <li><code>uncomfortable</code></li>
+                <li><code>ambience</code></li>
+                <li><code>dark</code></li>
+            </ul>
         `;
     }
 
@@ -252,7 +160,3 @@
 
     loadingAnimation();
 </script>
-
-
-</body>
-</html>
