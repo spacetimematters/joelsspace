@@ -35,19 +35,21 @@
             padding: 10px;
         }
 
-        #header, #subheader {
+        #header {
             font-size: 11px; /* Consistent font size */
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
-        }
-
-        #header {
             animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
         }
 
         #subheader {
-            animation: typing 2s steps(30, end) 2s; /* Delayed typing for subheader */
+            font-size: 11px; /* Consistent font size */
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            opacity: 0; /* Hide initially */
+            transition: opacity 0.5s; /* Smooth transition for opacity */
         }
 
         #outputArea {
@@ -154,6 +156,7 @@
         const text = "Created by joel";
         let index = 0;
         subheader.textContent = ""; // Clear the subheader
+        subheader.style.opacity = "0"; // Hide subheader initially
 
         const typingInterval = setInterval(() => {
             if (index < text.length) {
@@ -161,6 +164,9 @@
                 index++;
             } else {
                 clearInterval(typingInterval); // Clear interval when done typing
+                setTimeout(() => {
+                    subheader.style.opacity = "1"; // Show subheader after typing is complete
+                }, 500); // Delay before showing the subheader
             }
         }, 100); // Typing speed
     }
@@ -233,17 +239,4 @@
                 outputArea.textContent = "Error playing audio"; // Error message if play fails
             });
         } else {
-            outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
-        }
-    }
-
-    function adjustHeight() {
-        demoText.style.height = 'auto';
-        demoText.style.height = demoText.scrollHeight + 'px';
-    }
-
-    loadingAnimation();
-</script>
-
-</body>
-</html>
+            outputArea.textContent = "Please specify a valid song name."; // Prompt for
