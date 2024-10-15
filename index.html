@@ -89,7 +89,7 @@
 
 <div class="demo-box">
     <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader"></div> <!-- Added subheader for 'Created by Space/J' -->
+    <div id="subheader">Created by Space/J</div> <!-- Added subheader for 'Created by Space/J' -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -106,9 +106,6 @@
     backgroundAudio.volume = 0.1; // Play the background music quietly
     backgroundAudio.loop = true; // Loop the background music
     let isLoading = true;
-
-    // Define the list of available songs
-    const availableSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience"];
 
     // Function to fade out background audio after 10 seconds
     function fadeOutAudio(audio) {
@@ -217,8 +214,6 @@
                 } else if (command === "pause") {
                     audio.pause();
                     outputArea.textContent = "Paused: " + audio.src.split("/").pop(); // Display pause message
-                } else if (command === "songlist") { // New command for listing songs
-                    outputArea.textContent = "Available songs:\n" + availableSongs.join("\n"); // Display the list of songs
                 } else if (command !== "play") { // Only display error for unknown commands
                     outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`; // Display command error
                 }
@@ -239,4 +234,18 @@
             }).catch(error => {
                 outputArea.textContent = "Error playing audio"; // Error message if play fails
             });
+        } else {
+            outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
         }
+    }
+
+    function adjustHeight() {
+        demoText.style.height = 'auto';
+        demoText.style.height = demoText.scrollHeight + 'px';
+    }
+
+    loadingAnimation();
+</script>
+
+</body>
+</html>
