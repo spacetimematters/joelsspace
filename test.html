@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joel's Space</title>
+    <style>
+        body {
+            background-color: black;
+            color: #2a892a;
+            font-family: 'Inconsolata', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            font-size: 10px; /* Set uniform font size to 10px */
+        }
+
+        .demo-box {
+            border: 2px solid #2a892a;
+            width: 400px;
+            height: 300px;
+            text-align: left;
+            background-color: black;
+            overflow-y: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-top: 20px; /* Added margin at the top */
+            margin-left: 20px; /* Added margin on the left */
+            padding: 10px; /* Added padding inside the box */
+        }
+
+        #header {
+            text-align: center;
+            white-space: nowrap; /* Prevent line breaks */
+            overflow: hidden; /* Hide overflowing text */
+            animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite; /* Typewriter effect */
+        }
+
+        #createdBy {
+            text-align: center;
+            white-space: nowrap; /* Prevent line breaks */
+            overflow: hidden; /* Hide overflowing text */
+            animation: typing 2s steps(30, end) 2s forwards, blink-caret 0.75s step-end infinite; /* Typewriter effect with delay */
+            visibility: hidden; /* Initially hide the element */
+        }
+
+        #outputArea {
+            margin-bottom: 0;
+        }
+
+        #demoText {
+            background-color: black;
+            color: #2a892a;
+            border: none;
+            width: 100%;
+            padding: 0; /* Removed padding */
+            outline: none;
+            font-weight: 200;
+            resize: none;
+            overflow: hidden;
+            caret-color: #2a892a;
+        }
+
+        #demoText:focus {
+            outline: none;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-right-color: transparent; }
+            50% { border-right-color: #2a892a; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="demo-box">
+    <div id="header">LullSoft Version 1.0.130</div>
+    <div id="createdBy">created by space/j</div>
+    <div id="outputArea"></div>
+    <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
+</div>
+
+<script>
+    const loadingText = "LOADING";
+    const outputArea = document.getElementById("outputArea");
+    const demoText = document.getElementById("demoText");
+    const audio = new Audio("swiffle.mp3");
+    let isLoading = true;
+
+    function loadingAnimation() {
+        let dots = "";
+        let dotCount = 0;
+        const interval = setInterval(() => {
+            if (dotCount < 3) {
+                dots += ".";
+                dotCount++;
+            } else {
+                dots = "";
+                dotCount = 0;
+            }
+            outputArea.textContent = `${loadingText}${dots}`; // Display loading message
+        }, 500);
+
+        setTimeout(() => {
+            clearInterval(interval);
+            outputArea.textContent = ""; 
+            displaySuccessMessage(); 
+        }, 3000);
+    }
+
+    function displaySuccessMessage() {
+        outputArea.textContent = "Success!"; // Display success message
+        isLoading = false;
+        addPrompt();
+    }
+
+    function addPrompt() {
+        outputArea.textContent += ""; // Placeholder for prompt
+        placeCaretAtEnd(demoText);
+    }
+
+    function placeCaretAtEnd(el) {
+        el.focus();
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
+    function handleKey(event) {
+        if (isLoading) {
+            event.preventDefault();
+            return;
+        }
+
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const command = demoText.textContent.trim();
+
+            if (command) { // Check if command is not empty
+                outputArea.textContent = command; // Show the command typed
+
+                // Check for recognized commands
+                if (command.startsWith("play")) {
+                    const songName = command.split(" ").slice(1).join(" "); // Extract song name if provided
+                    if (songName === "") { // Resume command
+                        audio.play().then(() => {
+                            outputArea.textContent = "Resumed: swiffle"; // Display resume message
+                        }).catch(error => {
+                            outputArea.textContent = "Error resuming audio"; // Error message if resume fails
+                        });
+                    } else if (songName === "swiffle") { // Play song
+                        audio.src = "swiffle.mp3"; // Set the audio source
+                        audio.play().then(() => {
+                            outputArea.textContent = "Playing: swiffle"; // Display play message
+                        }).catch(error => {
+                            outputArea.textContent = "Error playing audio"; // Error message if play fails
+                        });
+                    } else {
+                        outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
+                    }
+                } else if (command.startsWith("select ")) {
+                    const songName = command.slice(7); // Extract the song name
+                    if (songName === "swiffle") {
+                        audio.src = "swiffle.mp3"; // Set the audio source
+                        audio.play().then(() => {
+                            outputArea.textContent = "Playing: swiffle"; // Display play message
+                        }).catch(error => {
+                            outputArea.textContent = "Error playing audio"; // Error message if play fails
+                        });
+                    } else {
+                        outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
+                    }
+                } else if (command === "pause") {
+                    audio.pause();
+                    outputArea.textContent = "Paused: swiffle"; // Display pause message
+                } else if (command !== "play") { // Only display error for unknown commands
+                    outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`; // Display command error
+                }
+
+                demoText.textContent = ""; // Clear the input box
+                addPrompt(); // Add a new prompt line after processing the command
+            }
+        }
+    }
+
+    function adjustHeight() {
+        demoText.style.height = 'auto';
+        demoText.style.height = demoText.scrollHeight + 'px';
+    }
+
+    // Show createdBy after header animation
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            document.getElementById('createdBy').style.visibility = 'visible'; // Make the createdBy text visible
+        }, 2000); // Adjust delay to match typing animation
+    });
+
+    loadingAnimation();
+</script>
+
+</body>
+</html>
