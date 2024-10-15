@@ -97,6 +97,7 @@
             z-index: 1; /* Place it behind the demo box */
             mix-blend-mode: multiply; /* Apply multiply blend mode */
             pointer-events: none; /* Disable pointer events on the video */
+            opacity: 0.5; /* Set opacity to 50% */
         }
     </style>
 </head>
@@ -251,14 +252,18 @@
             outputArea.innerHTML = 
                 `<div class="help-text">
                     <strong>Commands:</strong>
-                    <code>play</code>, <code>pause</code>, <code>select [song name]</code><br><br>
-                    <strong>Songs:</strong>
-                    <code>home, ohwell, cemetery, uncomfortable, ambience, dark</code>
+                    <code>play</code>, <code>select [song name]</code>, <code>pause</code>, <code>help</code>
                 </div>`;
         }
 
-        loadingAnimation();
-    </script>
+        function adjustHeight() {
+            demoText.style.height = "auto"; // Reset height
+            demoText.style.height = demoText.scrollHeight + "px"; // Adjust to fit content
+        }
 
+        window.onload = () => {
+            loadingAnimation(); 
+        };
+    </script>
 </body>
 </html>
