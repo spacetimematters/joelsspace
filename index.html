@@ -35,21 +35,13 @@
             padding: 10px;
         }
 
-        #header {
+        #header, #subheader {
             font-size: 11px; /* Consistent font size */
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
-            animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
-        }
-
-        #subheader {
-            font-size: 11px; /* Consistent font size */
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            opacity: 0; /* Hide initially */
-            transition: opacity 0.5s; /* Smooth transition for opacity */
+            border-right: 2px solid; /* Add caret effect */
+            animation: blink-caret 0.75s step-end infinite; /* Blinking caret effect */
         }
 
         #outputArea {
@@ -107,7 +99,6 @@
     backgroundAudio.loop = true; // Loop the background music
     let isLoading = true;
 
-    // Function to fade out background audio after 10 seconds
     function fadeOutAudio(audio) {
         let fadeInterval = setInterval(() => {
             if (audio.volume > 0.01) {
@@ -156,19 +147,20 @@
         const text = "Created by joel";
         let index = 0;
         subheader.textContent = ""; // Clear the subheader
-        subheader.style.opacity = "0"; // Hide subheader initially
+        subheader.style.animation = 'none'; // Reset animation
+        subheader.offsetHeight; // Trigger reflow to restart animation
 
-        const typingInterval = setInterval(() => {
-            if (index < text.length) {
-                subheader.textContent += text.charAt(index); // Add one character at a time
-                index++;
-            } else {
-                clearInterval(typingInterval); // Clear interval when done typing
-                setTimeout(() => {
-                    subheader.style.opacity = "1"; // Show subheader after typing is complete
-                }, 500); // Delay before showing the subheader
-            }
-        }, 100); // Typing speed
+        // Start typing the subheader after a short delay
+        setTimeout(() => {
+            const typingInterval = setInterval(() => {
+                if (index < text.length) {
+                    subheader.textContent += text.charAt(index); // Add one character at a time
+                    index++;
+                } else {
+                    clearInterval(typingInterval); // Clear interval when done typing
+                }
+            }, 100); // Typing speed
+        }, 2000); // Delay before starting the subheader typing
     }
 
     function addPrompt() {
@@ -239,4 +231,11 @@
                 outputArea.textContent = "Error playing audio"; // Error message if play fails
             });
         } else {
-            outputArea.textContent = "Please specify a valid song name."; // Prompt for invalid
+            outputArea.textContent = `'${songName}' is not a recognized song.`; // Error message for unknown songs
+        }
+    }
+
+    loadingAnimation(); // Start loading animation
+</script>
+</body>
+</html>
