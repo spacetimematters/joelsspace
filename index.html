@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joel's Space</title>
     <style>
-body {
-    background-color: black; /* Added this line to set the background color to black */
-    background-image: url('background.png'); /* Keep your existing background image */
-    background-size: cover; /* Scale the background image to cover the entire viewport */
-    background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Prevent the background image from repeating */
-    color: #2a892a;
-    font-family: 'Inconsolata', monospace;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100vh;
-    margin: 0;
-    font-size: 11px; /* All text size set to 11px */
-}
+        body {
+            background-color: black; /* Added this line to set the background color to black */
+            background-image: url('background.png'); /* Keep your existing background image */
+            background-size: cover; /* Scale the background image to cover the entire viewport */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            color: #2a892a;
+            font-family: 'Inconsolata', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            font-size: 11px; /* All text size set to 11px */
+        }
         .demo-box {
             border: 2px solid #2a892a;
             font-size: inherit;
@@ -106,6 +106,9 @@ body {
     backgroundAudio.volume = 0.1; // Play the background music quietly
     backgroundAudio.loop = true; // Loop the background music
     let isLoading = true;
+
+    // Define the list of available songs
+    const availableSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience"];
 
     // Function to fade out background audio after 10 seconds
     function fadeOutAudio(audio) {
@@ -214,6 +217,8 @@ body {
                 } else if (command === "pause") {
                     audio.pause();
                     outputArea.textContent = "Paused: " + audio.src.split("/").pop(); // Display pause message
+                } else if (command === "songlist") { // New command for listing songs
+                    outputArea.textContent = "Available songs:\n" + availableSongs.join("\n"); // Display the list of songs
                 } else if (command !== "play") { // Only display error for unknown commands
                     outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`; // Display command error
                 }
@@ -234,18 +239,4 @@ body {
             }).catch(error => {
                 outputArea.textContent = "Error playing audio"; // Error message if play fails
             });
-        } else {
-            outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
         }
-    }
-
-    function adjustHeight() {
-        demoText.style.height = 'auto';
-        demoText.style.height = demoText.scrollHeight + 'px';
-    }
-
-    loadingAnimation();
-</script>
-
-</body>
-</html>
