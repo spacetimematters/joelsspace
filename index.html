@@ -200,6 +200,8 @@
                 } else if (command === "pause") {
                     audio.pause();
                     outputArea.textContent = "Paused: " + audio.src.split("/").pop();
+                } else if (command === "help") {
+                    displayHelp(); // Call help function
                 } else if (command !== "play") {
                     outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`;
                 }
@@ -225,6 +227,24 @@
         }
     }
 
+    function displayHelp() {
+        outputArea.textContent = `
+            Syntax:
+            - play
+            - pause
+            - resume
+            - select [song name]
+            
+            Choices:
+            - home
+            - ohwell
+            - cemetery
+            - uncomfortable
+            - ambience
+            - dark
+        `;
+    }
+
     function adjustHeight() {
         demoText.style.height = 'auto';
         demoText.style.height = demoText.scrollHeight + 'px';
@@ -232,6 +252,7 @@
 
     loadingAnimation();
 </script>
+
 
 </body>
 </html>
