@@ -211,7 +211,7 @@
     }
 
     function selectSong(songName) {
-        const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience"];
+        const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience", "dark"]; // Added dark.mp3
         if (validSongs.includes(songName)) {
             audio.src = songName + ".mp3"; // Ensure the audio file is named correctly
             audio.play().then(() => {
