@@ -10,7 +10,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            color: #2a892a;
+            color: #1d421e; /* Updated text color */
             font-family: 'Inconsolata', monospace;
             display: flex;
             justify-content: center;
@@ -23,7 +23,7 @@
         }
 
         .demo-box {
-            border: 2px solid #2a892a;
+            border: 2px solid #1d421e; /* Updated border color */
             font-size: inherit;
             width: 400px;
             height: 300px;
@@ -43,14 +43,7 @@
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
-        }
-
-        #header {
-            animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
-        }
-
-        #subheader {
-            animation: typing 2s steps(30, end) 2s;
+            color: #1d421e; /* Updated header and subheader color */
         }
 
         #outputArea {
@@ -59,7 +52,7 @@
 
         #demoText {
             background-color: black;
-            color: #2a892a;
+            color: #1d421e; /* Updated demo text color */
             border: none;
             width: 100%;
             padding: 0;
@@ -67,7 +60,7 @@
             font-weight: 200;
             resize: none;
             overflow: hidden;
-            caret-color: #2a892a;
+            caret-color: #1d421e; /* Updated caret color */
             font-size: inherit;
             font-size: 16px; /* Ensure font size prevents zoom */
         }
@@ -83,7 +76,7 @@
 
         @keyframes blink-caret {
             from, to { border-right-color: transparent; }
-            50% { border-right-color: #2a892a; }
+            50% { border-right-color: #1d421e; }
         }
 
         /* Styles for the overlay video */
@@ -98,6 +91,10 @@
             mix-blend-mode: multiply; /* Apply multiply blend mode */
             pointer-events: none; /* Disable pointer events on the video */
             opacity: 0.5; /* Set opacity to 50% */
+        }
+
+        .help-text {
+            color: #1d421e; /* Ensure help text is also updated */
         }
     </style>
 </head>
@@ -208,62 +205,3 @@
 
                 if (command) {
                     outputArea.textContent = command; 
-                    processCommand(command);
-                    demoText.textContent = ""; // Clear the input box
-                    addPrompt();
-                }
-            } else {
-                typingAudio.currentTime = 0; // Reset audio to start
-                typingAudio.play(); // Play typing sound
-            }
-        }
-
-        function processCommand(command) {
-            if (command.startsWith("play")) {
-                selectSong(command.split(" ").slice(1).join(" "));
-            } else if (command.startsWith("select ")) {
-                selectSong(command.slice(7));
-            } else if (command === "pause") {
-                audio.pause();
-                outputArea.textContent = "Paused: " + audio.src.split("/").pop();
-            } else if (command === "help") {
-                displayHelp();
-            } else {
-                outputArea.textContent = `'${command}' is not recognized as an internal or external command.`;
-            }
-        }
-
-        function selectSong(songName) {
-            const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience", "dark"];
-            if (validSongs.includes(songName)) {
-                audio.src = songName + ".mp3";
-                audio.play().then(() => {
-                    outputArea.textContent = "Playing: " + songName;
-                    backgroundAudio.pause();
-                }).catch(error => {
-                    outputArea.textContent = "Error playing audio: " + error.message;
-                });
-            } else {
-                outputArea.textContent = "Please specify a valid song name.";
-            }
-        }
-
-        function displayHelp() {
-            outputArea.innerHTML = 
-                `<div class="help-text">
-                    <strong>Commands:</strong>
-                    <code>play</code>, <code>select [song name]</code>, <code>pause</code>, <code>help</code>
-                </div>`;
-        }
-
-        function adjustHeight() {
-            demoText.style.height = "auto"; // Reset height
-            demoText.style.height = demoText.scrollHeight + "px"; // Adjust to fit content
-        }
-
-        window.onload = () => {
-            loadingAnimation(); 
-        };
-    </script>
-</body>
-</html>
