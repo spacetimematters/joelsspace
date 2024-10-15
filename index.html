@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Joel's Space</title>
     <style>
         body {
@@ -18,7 +18,7 @@
             align-items: flex-start;
             min-height: 100vh;
             margin: 0;
-            font-size: 11px;
+            font-size: 16px; /* Increase font size to prevent zooming */
         }
 
         .demo-box {
@@ -36,7 +36,7 @@
         }
 
         #header, #subheader {
-            font-size: 11px;
+            font-size: 16px; /* Increase font size */
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
@@ -66,6 +66,7 @@
             overflow: hidden;
             caret-color: #2a892a;
             font-size: inherit;
+            font-size: 16px; /* Ensure font size prevents zoom */
         }
 
         #demoText:focus {
@@ -92,150 +93,147 @@
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
 
-    
-    <script>
-        const loadingText = "LOADING";
-        const outputArea = document.getElementById("outputArea");
-        const demoText = document.getElementById("demoText");
-        const subheader = document.getElementById("subheader");
-        const audio = new Audio();
-        const startupAudio = new Audio("startup.wav");
-        const backgroundAudio = new Audio("hard_drive.wav");
+<script>
+    const loadingText = "LOADING";
+    const outputArea = document.getElementById("outputArea");
+    const demoText = document.getElementById("demoText");
+    const subheader = document.getElementById("subheader");
+    const audio = new Audio();
+    const startupAudio = new Audio("startup.wav");
+    const backgroundAudio = new Audio("hard_drive.wav");
 
-        backgroundAudio.volume = 0.1;
-        backgroundAudio.loop = true;
-        let isLoading = true;
+    backgroundAudio.volume = 0.1;
+    backgroundAudio.loop = true;
+    let isLoading = true;
 
-        function fadeOutAudio(audio) {
-            let fadeInterval = setInterval(() => {
-                if (audio.volume > 0.01) {
-                    audio.volume -= 0.01;
-                } else {
-                    clearInterval(fadeInterval);
-                    audio.pause();
-                }
-            }, 100);
-        }
-
-        function loadingAnimation() {
-            let dots = "";
-            let dotCount = 0;
-            const interval = setInterval(() => {
-                dots = dotCount < 3 ? dots + "." : "";
-                dotCount = (dotCount + 1) % 4;
-                outputArea.textContent = `${loadingText}${dots}`;
-            }, 500);
-
-            setTimeout(() => {
-                clearInterval(interval);
-                outputArea.textContent = ""; 
-                displaySuccessMessage(); 
-            }, 3000);
-        }
-
-        function displaySuccessMessage() {
-            outputArea.textContent = "Success!";
-            isLoading = false;
-            addPrompt();
-            startupAudio.play();
-            startupAudio.addEventListener('ended', () => backgroundAudio.play());
-            setTimeout(() => fadeOutAudio(backgroundAudio), 10000);
-            typeSubheader();
-        }
-
-        function typeSubheader() {
-            const text = "Created by joel";
-            let index = 0;
-
-            const typingInterval = setInterval(() => {
-                if (index < text.length) {
-                    subheader.textContent += text.charAt(index);
-                    index++;
-                } else {
-                    clearInterval(typingInterval);
-                }
-            }, 100);
-        }
-
-        function addPrompt() {
-            outputArea.textContent += ""; 
-            placeCaretAtEnd(demoText);
-        }
-
-        function placeCaretAtEnd(el) {
-            el.focus();
-            const range = document.createRange();
-            range.selectNodeContents(el);
-            range.collapse(false);
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-        }
-
-        function handleKey(event) {
-            if (isLoading) {
-                event.preventDefault();
-                return;
-            }
-
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const command = demoText.textContent.trim();
-
-                if (command) {
-                    outputArea.textContent = command; 
-                    processCommand(command);
-                    demoText.textContent = ""; // Clear the input box
-                    addPrompt();
-                }
-            }
-        }
-
-        function processCommand(command) {
-            if (command.startsWith("play")) {
-                selectSong(command.split(" ").slice(1).join(" "));
-            } else if (command.startsWith("select ")) {
-                selectSong(command.slice(7));
-            } else if (command === "pause") {
+    function fadeOutAudio(audio) {
+        let fadeInterval = setInterval(() => {
+            if (audio.volume > 0.01) {
+                audio.volume -= 0.01;
+            } else {
+                clearInterval(fadeInterval);
                 audio.pause();
-                outputArea.textContent = "Paused: " + audio.src.split("/").pop();
-            } else if (command === "help") {
-                displayHelp();
+            }
+        }, 100);
+    }
+
+    function loadingAnimation() {
+        let dots = "";
+        let dotCount = 0;
+        const interval = setInterval(() => {
+            dots = dotCount < 3 ? dots + "." : "";
+            dotCount = (dotCount + 1) % 4;
+            outputArea.textContent = `${loadingText}${dots}`;
+        }, 500);
+
+        setTimeout(() => {
+            clearInterval(interval);
+            outputArea.textContent = ""; 
+            displaySuccessMessage(); 
+        }, 3000);
+    }
+
+    function displaySuccessMessage() {
+        outputArea.textContent = "Success!";
+        isLoading = false;
+        addPrompt();
+        startupAudio.play();
+        startupAudio.addEventListener('ended', () => backgroundAudio.play());
+        setTimeout(() => fadeOutAudio(backgroundAudio), 10000);
+        typeSubheader();
+    }
+
+    function typeSubheader() {
+        const text = "Created by joel";
+        let index = 0;
+
+        const typingInterval = setInterval(() => {
+            if (index < text.length) {
+                subheader.textContent += text.charAt(index);
+                index++;
             } else {
-                outputArea.textContent = `'${command}' is not recognized as an internal or external command.`;
+                clearInterval(typingInterval);
+            }
+        }, 100);
+    }
+
+    function addPrompt() {
+        outputArea.textContent += ""; 
+        placeCaretAtEnd(demoText);
+    }
+
+    function placeCaretAtEnd(el) {
+        el.focus();
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
+    function handleKey(event) {
+        if (isLoading) {
+            event.preventDefault();
+            return;
+        }
+
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const command = demoText.textContent.trim();
+
+            if (command) {
+                outputArea.textContent = command; 
+                processCommand(command);
+                demoText.textContent = ""; // Clear the input box
+                addPrompt();
             }
         }
+    }
 
-        function selectSong(songName) {
-            const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience", "dark"];
-            if (validSongs.includes(songName)) {
-                audio.src = songName + ".mp3";
-                audio.play().then(() => {
-                    outputArea.textContent = "Playing: " + songName;
-                    backgroundAudio.pause();
-                }).catch(error => {
-                    outputArea.textContent = "Error playing audio: " + error.message;
-                });
-            } else {
-                outputArea.textContent = "Please specify a valid song name.";
-            }
+    function processCommand(command) {
+        if (command.startsWith("play")) {
+            selectSong(command.split(" ").slice(1).join(" "));
+        } else if (command.startsWith("select ")) {
+            selectSong(command.slice(7));
+        } else if (command === "pause") {
+            audio.pause();
+            outputArea.textContent = "Paused: " + audio.src.split("/").pop();
+        } else if (command === "help") {
+            displayHelp();
+        } else {
+            outputArea.textContent = `'${command}' is not recognized as an internal or external command.`;
         }
+    }
 
-        function displayHelp() {
-            outputArea.innerHTML = `
-                <div class="help-text">
-                    <strong>Commands:</strong>
-                    <code>play</code>, <code>pause</code>, <code>select [song name]</code><br><br>
-                    <strong>Songs:</strong>
-                    <code>home, ohwell, cemetery, uncomfortable, ambience, dark</code>
-                </div>
-            `;
+    function selectSong(songName) {
+        const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience", "dark"];
+        if (validSongs.includes(songName)) {
+            audio.src = songName + ".mp3";
+            audio.play().then(() => {
+                outputArea.textContent = "Playing: " + songName;
+                backgroundAudio.pause();
+            }).catch(error => {
+                outputArea.textContent = "Error playing audio: " + error.message;
+            });
+        } else {
+            outputArea.textContent = "Please specify a valid song name.";
         }
+    }
 
-        loadingAnimation();
-    </script>
-</body>
+    function displayHelp() {
+        outputArea.innerHTML = `
+            <div class="help-text">
+                <strong>Commands:</strong>
+                <code>play</code>, <code>pause</code>, <code>select [song name]</code><br><br>
+                <strong>Songs:</strong>
+                <code>home, ohwell, cemetery, uncomfortable, ambience, dark</code>
+            </div>
+        `;
+    }
 
+    loadingAnimation();
+</script>
 
 </body>
 </html>
