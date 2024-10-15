@@ -77,7 +77,7 @@
 <body>
 
 <div class="demo-box">
-    <div id="header">LullSoft Version 1.0.145</div>
+    <div id="header">LullSoft Version 1.0.147</div>
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -88,9 +88,29 @@
     const demoText = document.getElementById("demoText");
     const audio = new Audio();
     const backgroundAudio = new Audio("hard drive.wav"); // Background audio file
-    backgroundAudio.volume = 0.1; // Play the background music quietly
+    backgroundAudio.volume = 0.1; // Set initial volume
     backgroundAudio.loop = true; // Loop the background music
     let isLoading = true;
+
+    // Slow fade-out function after 10 seconds
+    function startFadeOut() {
+        let fadeDuration = 5000; // Duration of fade in milliseconds (e.g., 5 seconds)
+        let fadeStep = 0.01; // Amount to reduce per interval
+        let isFading = false;
+
+        if (isFading) return; // Prevent multiple fade-out events
+        isFading = true;
+
+        const fadeInterval = fadeDuration / (backgroundAudio.volume / fadeStep); // Interval timing
+
+        const fadeOut = setInterval(() => {
+            if (backgroundAudio.volume > 0) {
+                backgroundAudio.volume = Math.max(0, backgroundAudio.volume - fadeStep); // Decrease volume
+            } else {
+                clearInterval(fadeOut); // Stop fading when volume reaches 0
+            }
+        }, fadeInterval);
+    }
 
     function loadingAnimation() {
         let dots = "";
@@ -118,6 +138,7 @@
         isLoading = false;
         addPrompt();
         backgroundAudio.play(); // Start playing background audio after loading
+        setTimeout(startFadeOut, 10000); // Start fade-out after 10 seconds
     }
 
     function addPrompt() {
