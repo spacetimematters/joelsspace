@@ -39,6 +39,14 @@
             animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
         }
 
+        #subheader {
+            font-size: inherit;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 2s steps(30, end) 2s; /* Delayed typing for subheader */
+        }
+
         #outputArea {
             margin-bottom: 0;
         }
@@ -77,7 +85,8 @@
 <body>
 
 <div class="demo-box">
-    <div id="header">LullSoft Version 1.0.147</div>
+    <div id="header">LullSoft Version 1.0.130</div>
+    <div id="subheader">Created by Space/J</div> <!-- Added subheader for 'Created by Space/J' -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -88,28 +97,20 @@
     const demoText = document.getElementById("demoText");
     const audio = new Audio();
     const backgroundAudio = new Audio("hard drive.wav"); // Background audio file
-    backgroundAudio.volume = 0.1; // Set initial volume
+    backgroundAudio.volume = 0.1; // Play the background music quietly
     backgroundAudio.loop = true; // Loop the background music
     let isLoading = true;
 
-    // Slow fade-out function after 10 seconds
-    function startFadeOut() {
-        let fadeDuration = 5000; // Duration of fade in milliseconds (e.g., 5 seconds)
-        let fadeStep = 0.01; // Amount to reduce per interval
-        let isFading = false;
-
-        if (isFading) return; // Prevent multiple fade-out events
-        isFading = true;
-
-        const fadeInterval = fadeDuration / (backgroundAudio.volume / fadeStep); // Interval timing
-
-        const fadeOut = setInterval(() => {
-            if (backgroundAudio.volume > 0) {
-                backgroundAudio.volume = Math.max(0, backgroundAudio.volume - fadeStep); // Decrease volume
+    // Function to fade out background audio after 10 seconds
+    function fadeOutAudio(audio) {
+        let fadeInterval = setInterval(() => {
+            if (audio.volume > 0.01) {
+                audio.volume -= 0.01; // Gradually reduce volume
             } else {
-                clearInterval(fadeOut); // Stop fading when volume reaches 0
+                clearInterval(fadeInterval);
+                audio.pause(); // Stop audio when volume reaches zero
             }
-        }, fadeInterval);
+        }, 100); // Decrease volume every 100ms
     }
 
     function loadingAnimation() {
@@ -138,7 +139,7 @@
         isLoading = false;
         addPrompt();
         backgroundAudio.play(); // Start playing background audio after loading
-        setTimeout(startFadeOut, 10000); // Start fade-out after 10 seconds
+        setTimeout(() => fadeOutAudio(backgroundAudio), 10000); // Trigger fade out after 10 seconds
     }
 
     function addPrompt() {
