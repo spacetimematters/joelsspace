@@ -14,11 +14,11 @@
             align-items: flex-start;
             height: 100vh;
             margin: 0;
-            font-size: 10px; /* Set uniform font size to 10px */
         }
 
         .demo-box {
             border: 2px solid #2a892a;
+            font-size: 10px; /* Set font size to 10px */
             width: 400px;
             height: 300px;
             text-align: left;
@@ -31,18 +31,11 @@
         }
 
         #header {
+            font-size: 10px;
             text-align: center;
             white-space: nowrap; /* Prevent line breaks */
             overflow: hidden; /* Hide overflowing text */
             animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite; /* Typewriter effect */
-        }
-
-        #createdBy {
-            text-align: center;
-            white-space: nowrap; /* Prevent line breaks */
-            overflow: hidden; /* Hide overflowing text */
-            animation: typing 2s steps(30, end) 2s forwards, blink-caret 0.75s step-end infinite; /* Typewriter effect with delay */
-            visibility: hidden; /* Initially hide the element */
         }
 
         #outputArea {
@@ -80,8 +73,7 @@
 <body>
 
 <div class="demo-box">
-    <div id="header">LullSoft Version 1.0.130</div>
-    <div id="createdBy">created by space/j</div>
+    <div id="header">LullSoft<br>Created by space/j</div> <!-- Added 'Created by space/j' -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -90,7 +82,7 @@
     const loadingText = "LOADING";
     const outputArea = document.getElementById("outputArea");
     const demoText = document.getElementById("demoText");
-    const audio = new Audio("swiffle.mp3");
+    const audio = new Audio();
     let isLoading = true;
 
     function loadingAnimation() {
@@ -149,30 +141,31 @@
                 outputArea.textContent = command; // Show the command typed
 
                 // Check for recognized commands
+                const songs = ["home", "ohwell", "cemetery", "uncomfortable", "ambience"]; // Array of song names
                 if (command.startsWith("play")) {
                     const songName = command.split(" ").slice(1).join(" "); // Extract song name if provided
-                    if (songName === "") { // Resume command
+                    if (songs.includes(songName)) { // Check if the song is valid
+                        audio.src = `${songName}.mp3`; // Set the audio source
                         audio.play().then(() => {
-                            outputArea.textContent = "Resumed: swiffle"; // Display resume message
-                        }).catch(error => {
-                            outputArea.textContent = "Error resuming audio"; // Error message if resume fails
-                        });
-                    } else if (songName === "swiffle") { // Play song
-                        audio.src = "swiffle.mp3"; // Set the audio source
-                        audio.play().then(() => {
-                            outputArea.textContent = "Playing: swiffle"; // Display play message
+                            outputArea.textContent = `Playing: ${songName}`; // Display play message
                         }).catch(error => {
                             outputArea.textContent = "Error playing audio"; // Error message if play fails
+                        });
+                    } else if (songName === "") { // Resume command
+                        audio.play().then(() => {
+                            outputArea.textContent = "Resumed"; // Display resume message
+                        }).catch(error => {
+                            outputArea.textContent = "Error resuming audio"; // Error message if resume fails
                         });
                     } else {
                         outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
                     }
                 } else if (command.startsWith("select ")) {
                     const songName = command.slice(7); // Extract the song name
-                    if (songName === "swiffle") {
-                        audio.src = "swiffle.mp3"; // Set the audio source
+                    if (songs.includes(songName)) {
+                        audio.src = `${songName}.mp3`; // Set the audio source
                         audio.play().then(() => {
-                            outputArea.textContent = "Playing: swiffle"; // Display play message
+                            outputArea.textContent = `Playing: ${songName}`; // Display play message
                         }).catch(error => {
                             outputArea.textContent = "Error playing audio"; // Error message if play fails
                         });
@@ -181,7 +174,7 @@
                     }
                 } else if (command === "pause") {
                     audio.pause();
-                    outputArea.textContent = "Paused: swiffle"; // Display pause message
+                    outputArea.textContent = "Paused"; // Display pause message
                 } else if (command !== "play") { // Only display error for unknown commands
                     outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`; // Display command error
                 }
@@ -196,13 +189,6 @@
         demoText.style.height = 'auto';
         demoText.style.height = demoText.scrollHeight + 'px';
     }
-
-    // Show createdBy after header animation
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            document.getElementById('createdBy').style.visibility = 'visible'; // Make the createdBy text visible
-        }, 2000); // Adjust delay to match typing animation
-    });
 
     loadingAnimation();
 </script>
