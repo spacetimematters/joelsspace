@@ -198,7 +198,7 @@
 
                     if (songName === "") { // Resume command
                         audio.play().then(() => {
-                            outputArea.textContent = "Resumed: swiffle"; // Display resume message
+                            outputArea.textContent = "Resumed: " + audio.src.split("/").pop(); // Display resume message
                         }).catch(error => {
                             outputArea.textContent = "Error resuming audio"; // Error message if resume fails
                         });
