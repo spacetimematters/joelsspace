@@ -1,11 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Joel's Space</title>
     <style>
-        /* The rest of your existing styles remain unchanged */
+        body {
+            background-color: black;
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #2a892a;
+            font-family: 'Inconsolata', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            font-size: 16px; /* Increase font size to prevent zooming */
+        }
+
+        .demo-box {
+            border: 2px solid #2a892a;
+            font-size: inherit;
+            width: 400px;
+            height: 300px;
+            text-align: left;
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            margin-left: 20px;
+            padding: 10px;
+        }
+
+        #header, #subheader {
+            font-size: 16px; /* Increase font size */
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        #header {
+            animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
+        }
+
+        #subheader {
+            animation: typing 2s steps(30, end) 2s;
+        }
+
+        #outputArea {
+            margin-bottom: 0;
+        }
+
+        #demoText {
+            background-color: black;
+            color: #2a892a;
+            border: none;
+            width: 100%;
+            padding: 0;
+            outline: none;
+            font-weight: 200;
+            resize: none;
+            overflow: hidden;
+            caret-color: #2a892a;
+            font-size: inherit;
+            font-size: 16px; /* Ensure font size prevents zoom */
+        }
+
+        #demoText:focus {
+            outline: none;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-right-color: transparent; }
+            50% { border-right-color: #2a892a; }
+        }
+
+        .help-text {
+            color: #2a892a;
+            font-family: 'Inconsolata', monospace;
+        }
+
+        .help-text code {
+            color: #2a892a;
+        }
     </style>
 </head>
 <body>
@@ -25,7 +109,6 @@
     const audio = new Audio();
     const startupAudio = new Audio("startup.wav");
     const backgroundAudio = new Audio("hard_drive.wav");
-    const typingSound = new Audio("add5323c450fe7758cce9197142dcbb7.mp3"); // Add typing sound
 
     backgroundAudio.volume = 0.1;
     backgroundAudio.loop = true;
@@ -48,7 +131,7 @@
         const interval = setInterval(() => {
             dots = dotCount < 3 ? dots + "." : "";
             dotCount = (dotCount + 1) % 4;
-            outputArea.textContent = `${loadingText}${dots}`;
+            outputArea.textContent = loadingText + dots;
         }, 500);
 
         setTimeout(() => {
@@ -103,10 +186,6 @@
             return;
         }
 
-        // Play typing sound
-        typingSound.currentTime = 0; // Restart the sound for each key press
-        typingSound.play();
-
         if (event.key === 'Enter') {
             event.preventDefault();
             const command = demoText.textContent.trim();
@@ -151,14 +230,13 @@
     }
 
     function displayHelp() {
-        outputArea.innerHTML = `
-            <div class="help-text">
+        outputArea.innerHTML = 
+            `<div class="help-text">
                 <strong>Commands:</strong>
                 <code>play</code>, <code>pause</code>, <code>select [song name]</code><br><br>
                 <strong>Songs:</strong>
                 <code>home, ohwell, cemetery, uncomfortable, ambience, dark</code>
-            </div>
-        `;
+            </div>`;
     }
 
     loadingAnimation();
