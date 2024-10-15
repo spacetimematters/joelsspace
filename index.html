@@ -4,71 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joel's Space</title>
-    <style>
-        body {
-            background-color: black;
-            color: #2a892a;
-            font-family: 'Inconsolata', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            height: 100vh;
-            margin: 0;
-        }
+ <style>
+    body {
+        background-color: black;
+        color: #2a892a;
+        font-family: 'Inconsolata', monospace;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+        margin: 0;
+        font-size: 11px; /* Set the base font size to 11px */
+    }
 
-        .demo-box {
-            border: 2px solid #2a892a;
-            font-size: 12px; /* Set font size to 10px */
-            width: 400px;
-            height: 300px;
-            text-align: left;
-            background-color: black;
-            overflow-y: auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            margin-top: 20px; /* Added margin at the top */
-            margin-left: 20px; /* Added margin on the left */
-            padding: 10px; /* Added padding inside the box */
-        }
+    .demo-box {
+        border: 2px solid #2a892a;
+        font-size: inherit; /* Inherit font size from body */
+        width: 400px;
+        height: 300px;
+        text-align: left;
+        background-color: black;
+        overflow-y: auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        margin-top: 20px;
+        margin-left: 20px;
+        padding: 10px;
+    }
 
-        #header {
-            font-size: 10px;
-            text-align: center;
-            white-space: nowrap; /* Prevent line breaks */
-            overflow: hidden; /* Hide overflowing text */
-            animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite; /* Typewriter effect */
-        }
+    #header {
+        font-size: inherit; /* Inherit font size from body */
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
+    }
 
-        #outputArea {
-            margin-bottom: 0;
-        }
+    #outputArea {
+        margin-bottom: 0;
+    }
 
-        #demoText {
-            background-color: black;
-            color: #2a892a;
-            border: none;
-            width: 100%;
-            padding: 0; /* Removed padding */
-            outline: none;
-            font-weight: 200;
-            resize: none;
-            overflow: hidden;
-            caret-color: #2a892a;
-        }
+    #demoText {
+        background-color: black;
+        color: #2a892a;
+        border: none;
+        width: 100%;
+        padding: 0;
+        outline: none;
+        font-weight: 200;
+        resize: none;
+        overflow: hidden;
+        caret-color: #2a892a;
+        font-size: inherit; /* Inherit font size from body */
+    }
 
-        #demoText:focus {
-            outline: none;
-        }
+    #demoText:focus {
+        outline: none;
+    }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
 
-        @keyframes blink-caret {
-            from, to { border-right-color: transparent; }
-            50% { border-right-color: #2a892a; }
-        }
-    </style>
+    @keyframes blink-caret {
+        from, to { border-right-color: transparent; }
+        50% { border-right-color: #2a892a; }
+    }
+</style>
+
 </head>
 <body>
 
