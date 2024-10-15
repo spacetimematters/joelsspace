@@ -1,4 +1,4 @@
-<html lang="en"> 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
@@ -104,7 +104,7 @@
 
     <!-- Overlay video -->
     <video autoplay muted loop class="overlay-video">
-        <source src="cyber-crime-computer-hacker-screen-1-2023-11-27-04-58-42-utc.mov" type="video/mp4">
+        <source src="1015.mp4" type="video/mp4"> <!-- Updated video source -->
         Your browser does not support the video tag.
     </video>
 
@@ -121,6 +121,7 @@
         const demoText = document.getElementById("demoText");
         const subheader = document.getElementById("subheader");
         const audio = new Audio();
+        const typingAudio = new Audio('add5323c450fe7758cce9197142dcbb7.mp3'); // Add typing sound
         const startupAudio = new Audio("startup.wav");
         const backgroundAudio = new Audio("hard_drive.wav");
 
@@ -210,6 +211,9 @@
                     demoText.textContent = ""; // Clear the input box
                     addPrompt();
                 }
+            } else {
+                typingAudio.currentTime = 0; // Reset audio to start
+                typingAudio.play(); // Play typing sound
             }
         }
 
