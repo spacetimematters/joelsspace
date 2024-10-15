@@ -1,47 +1,53 @@
-<style>
-    body {
-        background-color: black; /* Set the background color to black */
-        background-image: url('background.png'); /* Background image */
-        background-size: contain; /* Scale the background image to fit the viewport */
-        background-position: center; /* Center the background image */
-        background-size: contain;
-        background-repeat: no-repeat; /* Prevent the background image from repeating */
-        color: #2a892a;
-        font-family: 'Inconsolata', monospace;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        height: 100vh;
-        margin: 0;
-        font-size: 11px; /* All text size set to 11px */
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joel's Space</title>
+    <style>
+        body {
+            background-color: black; /* Set the background color to black */
+            background-image: url('background.png'); /* Background image */
+            background-size: cover; /* Scale the background image to cover the viewport */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            color: #2a892a;
+            font-family: 'Inconsolata', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh; /* Ensure the body is at least the height of the viewport */
+            margin: 0;
+            font-size: 11px; /* All text size set to 11px */
+        }
+
         .demo-box {
             border: 2px solid #2a892a;
-            font-size: inherit;
-            width: 400px;
-            height: 300px;
+            font-size: inherit; /* Inherit font size from body */
+            width: 400px; /* Fixed width for demo box */
+            height: 300px; /* Fixed height for demo box */
             text-align: left;
             background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background for better readability */
-            overflow-y: auto;
+            overflow-y: auto; /* Allow scrolling */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             margin-top: 20px;
             margin-left: 20px;
             padding: 10px;
         }
 
-        #header {
-            font-size: inherit;
+        #header, #subheader {
+            font-size: 11px; /* Consistent font size */
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
+        }
+
+        #header {
             animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
         }
 
         #subheader {
-            font-size: inherit;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
+            animation: typing 2s steps(30, end) 2s; /* Delayed typing for subheader */
         }
 
         #outputArea {
@@ -59,9 +65,7 @@
             resize: none;
             overflow: hidden;
             caret-color: #2a892a;
-            font-size: 16px; /* Set font size to 16px to prevent zoom on mobile */
-            transform: scale(0.69); /* Scale down to visually resemble 11px */
-            transform-origin: left; /* Ensure scaling happens from the left */
+            font-size: inherit; /* Inherit font size from body */
         }
 
         #demoText:focus {
@@ -82,8 +86,8 @@
 <body>
 
 <div class="demo-box">
-    <div id="header">LullSoft Version 1.0.61</div>
-    <div id="subheader"></div> <!-- Keep subheader empty initially -->
+    <div id="header">LullSoft Version 1.0.130</div>
+    <div id="subheader">Created by joel</div> <!-- Moved subheader here for visibility -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -208,8 +212,6 @@
                 } else if (command === "pause") {
                     audio.pause();
                     outputArea.textContent = "Paused: " + audio.src.split("/").pop(); // Display pause message
-                } else if (command === "songlist") { // Check for songlist command
-                    outputArea.textContent = "Available songs: home, ohwell, cemetery, uncomfortable, ambience"; // List songs
                 } else if (command !== "play") { // Only display error for unknown commands
                     outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`; // Display command error
                 }
@@ -243,4 +245,5 @@
     loadingAnimation();
 </script>
 
-</
+</body>
+</html>
