@@ -96,6 +96,7 @@
     const outputArea = document.getElementById("outputArea");
     const demoText = document.getElementById("demoText");
     const audio = new Audio();
+    const startupAudio = new Audio("startup.wav"); // Startup audio file
     const backgroundAudio = new Audio("hard drive.wav"); // Background audio file
     backgroundAudio.volume = 0.1; // Play the background music quietly
     backgroundAudio.loop = true; // Loop the background music
@@ -138,6 +139,7 @@
         outputArea.textContent = "Success!"; // Display success message
         isLoading = false;
         addPrompt();
+        startupAudio.play(); // Play startup sound effect
         backgroundAudio.play(); // Start playing background audio after loading
         setTimeout(() => fadeOutAudio(backgroundAudio), 10000); // Trigger fade out after 10 seconds
     }
