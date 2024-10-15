@@ -87,7 +87,7 @@
 
 <div class="demo-box">
     <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader">Created by joel</div> <!-- Moved subheader here for visibility -->
+    <div id="subheader"></div> <!-- Leave this empty for typing effect -->
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -153,7 +153,6 @@
     function typeSubheader() {
         const text = "Created by joel";
         let index = 0;
-        subheader.textContent = ""; // Clear the subheader
 
         const typingInterval = setInterval(() => {
             if (index < text.length) {
