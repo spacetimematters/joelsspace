@@ -1,4 +1,4 @@
-<html lang="en"> 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
@@ -84,11 +84,6 @@
 
         .help-text {
             color: #2a892a;
-            font-family: 'Inconsolata', monospace;
-        }
-
-        .help-text code {
-            color: #2a892a;
         }
     </style>
 </head>
@@ -109,16 +104,12 @@
     const audio = new Audio();
     const startupAudio = new Audio("startup.wav");
     const backgroundAudio = new Audio("hard_drive.wav");
-    const typingSound = new Audio("add5323c450fe7758cce9197142dcbb7"); // Typing sound effect
+    const typingSound = new Audio("add5323c450fe7758cce9197142dcbb7.mp3"); // Updated audio file
 
     backgroundAudio.volume = 0.1;
     backgroundAudio.loop = true;
     let isLoading = true;
-
-    function playTypingSound() {
-        typingSound.currentTime = 0;
-        typingSound.play();
-    }
+    let isAudioPaused = false; // Track audio pause state
 
     function fadeOutAudio(audio) {
         let fadeInterval = setInterval(() => {
@@ -137,7 +128,7 @@
         const interval = setInterval(() => {
             dots = dotCount < 3 ? dots + "." : "";
             dotCount = (dotCount + 1) % 4;
-            outputArea.textContent = loadingText + dots;
+            outputArea.textContent = `${loadingText}${dots}`;
         }, 500);
 
         setTimeout(() => {
@@ -165,7 +156,6 @@
             if (index < text.length) {
                 subheader.textContent += text.charAt(index);
                 index++;
-                playTypingSound();
             } else {
                 clearInterval(typingInterval);
             }
@@ -193,6 +183,8 @@
             return;
         }
 
+        playTypingSound(); // Play typing sound for every key press
+
         if (event.key === 'Enter') {
             event.preventDefault();
             const command = demoText.textContent.trim();
@@ -203,9 +195,14 @@
                 demoText.textContent = ""; // Clear the input box
                 addPrompt();
             }
-        } else {
-            playTypingSound();
         }
+    }
+
+    function playTypingSound() {
+        typingSound.currentTime = 0; // Reset audio to start
+        typingSound.play().catch(error => {
+            console.error("Error playing typing sound:", error);
+        }); // Play typing sound
     }
 
     function processCommand(command) {
@@ -215,7 +212,19 @@
             selectSong(command.slice(7));
         } else if (command === "pause") {
             audio.pause();
+            isAudioPaused = true; // Set the paused state
             outputArea.textContent = "Paused: " + audio.src.split("/").pop();
+        } else if (command === "resume") {
+            if (isAudioPaused) {
+                audio.play().then(() => {
+                    outputArea.textContent = "Resumed: " + audio.src.split("/").pop();
+                    isAudioPaused = false; // Reset the paused state
+                }).catch(error => {
+                    outputArea.textContent = "Error resuming audio: " + error.message;
+                });
+            } else {
+                outputArea.textContent = "Audio is already playing.";
+            }
         } else if (command === "help") {
             displayHelp();
         } else {
@@ -242,13 +251,14 @@
         outputArea.innerHTML = 
             `<div class="help-text">
                 <strong>Commands:</strong>
-                <code>play</code>, <code>pause</code>, <code>select [song name]</code><br><br>
+                <code>play</code>, <code>pause</code>, <code>resume</code>, <code>select [song name]</code><br><br>
                 <strong>Songs:</strong>
-                <code>home, ohwell, cemetery, uncomfortable, ambience, dark</code>
+                <code>home, ohwell, cemetery, swiffle, uncomfortable, ambience, dark</code>
             </div>`;
     }
 
-    loadingAnimation();
+    // Start loading animation when the page loads
+    window.onload = loadingAnimation;
 </script>
 
 </body>
