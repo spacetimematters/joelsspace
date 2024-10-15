@@ -6,29 +6,29 @@
     <title>Joel's Space</title>
     <style>
         body {
-            background-color: black; /* Set the background color to black */
-            background-image: url('background.png'); /* Background image */
-            background-size: cover; /* Scale the background image to cover the viewport */
-            background-position: center; /* Center the background image */
-            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            background-color: black;
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             color: #2a892a;
             font-family: 'Inconsolata', monospace;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100vh; /* Ensure the body is at least the height of the viewport */
+            min-height: 100vh;
             margin: 0;
-            font-size: 11px; /* All text size set to 11px */
+            font-size: 11px;
         }
 
         .demo-box {
             border: 2px solid #2a892a;
-            font-size: inherit; /* Inherit font size from body */
-            width: 400px; /* Fixed width for demo box */
-            height: 300px; /* Fixed height for demo box */
+            font-size: inherit;
+            width: 400px;
+            height: 300px;
             text-align: left;
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background for better readability */
-            overflow-y: auto; /* Allow scrolling */
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             margin-top: 20px;
             margin-left: 20px;
@@ -36,7 +36,7 @@
         }
 
         #header, #subheader {
-            font-size: 11px; /* Consistent font size */
+            font-size: 11px;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
@@ -47,7 +47,7 @@
         }
 
         #subheader {
-            animation: typing 2s steps(30, end) 2s; /* Delayed typing for subheader */
+            animation: typing 2s steps(30, end) 2s;
         }
 
         #outputArea {
@@ -65,7 +65,7 @@
             resize: none;
             overflow: hidden;
             caret-color: #2a892a;
-            font-size: inherit; /* Inherit font size from body */
+            font-size: inherit;
         }
 
         #demoText:focus {
@@ -87,7 +87,7 @@
 
 <div class="demo-box">
     <div id="header">LullSoft Version 1.0.130</div>
-    <div id="subheader"></div> <!-- Leave this empty for typing effect -->
+    <div id="subheader"></div>
     <div id="outputArea"></div>
     <div id="demoText" contenteditable="true" onkeydown="handleKey(event)" oninput="adjustHeight()"></div>
 </div>
@@ -101,20 +101,19 @@
     const startupAudio = new Audio("startup.wav"); // Startup audio file
     const backgroundAudio = new Audio("hard_drive.wav"); // Background audio file
 
-    backgroundAudio.volume = 0.1; // Play the background music quietly
-    backgroundAudio.loop = true; // Loop the background music
+    backgroundAudio.volume = 0.1;
+    backgroundAudio.loop = true;
     let isLoading = true;
 
-    // Function to fade out background audio after 10 seconds
     function fadeOutAudio(audio) {
         let fadeInterval = setInterval(() => {
             if (audio.volume > 0.01) {
-                audio.volume -= 0.01; // Gradually reduce volume
+                audio.volume -= 0.01;
             } else {
                 clearInterval(fadeInterval);
-                audio.pause(); // Stop audio when volume reaches zero
+                audio.pause();
             }
-        }, 100); // Decrease volume every 100ms
+        }, 100);
     }
 
     function loadingAnimation() {
@@ -128,7 +127,7 @@
                 dots = "";
                 dotCount = 0;
             }
-            outputArea.textContent = `${loadingText}${dots}`; // Display loading message
+            outputArea.textContent = `${loadingText}${dots}`;
         }, 500);
 
         setTimeout(() => {
@@ -139,15 +138,15 @@
     }
 
     function displaySuccessMessage() {
-        outputArea.textContent = "Success!"; // Display success message
+        outputArea.textContent = "Success!";
         isLoading = false;
         addPrompt();
-        startupAudio.play(); // Play startup sound effect
+        startupAudio.play();
         startupAudio.addEventListener('ended', function() {
-            backgroundAudio.play(); // Start playing background audio after startup audio ends
+            backgroundAudio.play();
         });
-        setTimeout(() => fadeOutAudio(backgroundAudio), 10000); // Trigger fade out after 10 seconds
-        typeSubheader(); // Start typing the subheader after success message
+        setTimeout(() => fadeOutAudio(backgroundAudio), 10000);
+        typeSubheader();
     }
 
     function typeSubheader() {
@@ -156,16 +155,16 @@
 
         const typingInterval = setInterval(() => {
             if (index < text.length) {
-                subheader.textContent += text.charAt(index); // Add one character at a time
+                subheader.textContent += text.charAt(index);
                 index++;
             } else {
-                clearInterval(typingInterval); // Clear interval when done typing
+                clearInterval(typingInterval);
             }
-        }, 100); // Typing speed
+        }, 100);
     }
 
     function addPrompt() {
-        outputArea.textContent += ""; // Placeholder for prompt
+        outputArea.textContent += ""; 
         placeCaretAtEnd(demoText);
     }
 
@@ -189,34 +188,24 @@
             event.preventDefault();
             const command = demoText.textContent.trim();
 
-            if (command) { // Check if command is not empty
-                outputArea.textContent = command; // Show the command typed
+            if (command) {
+                outputArea.textContent = command; 
 
-                // Check for recognized commands
                 if (command.startsWith("play")) {
                     const songName = command.split(" ").slice(1).join(" "); // Extract song name if provided
-
-                    if (songName === "") { // Resume command
-                        audio.play().then(() => {
-                            outputArea.textContent = "Resumed: " + audio.src.split("/").pop(); // Display resume message
-                        }).catch(error => {
-                            outputArea.textContent = "Error resuming audio"; // Error message if resume fails
-                        });
-                    } else {
-                        selectSong(songName); // Play selected song
-                    }
+                    selectSong(songName); // Play selected song
                 } else if (command.startsWith("select ")) {
                     const songName = command.slice(7); // Extract the song name
                     selectSong(songName); // Play selected song
                 } else if (command === "pause") {
                     audio.pause();
-                    outputArea.textContent = "Paused: " + audio.src.split("/").pop(); // Display pause message
-                } else if (command !== "play") { // Only display error for unknown commands
-                    outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`; // Display command error
+                    outputArea.textContent = "Paused: " + audio.src.split("/").pop();
+                } else if (command !== "play") {
+                    outputArea.textContent = `'${command}' is not recognized as an internal or external command, operable program.`;
                 }
 
                 demoText.textContent = ""; // Clear the input box
-                addPrompt(); // Add a new prompt line after processing the command
+                addPrompt();
             }
         }
     }
@@ -224,12 +213,12 @@
     function selectSong(songName) {
         const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience"];
         if (validSongs.includes(songName)) {
-            audio.src = songName + ".mp3"; // Set the selected audio source
+            audio.src = songName + ".mp3"; // Ensure the audio file is named correctly
             audio.play().then(() => {
                 outputArea.textContent = "Playing: " + songName; // Display play message
                 backgroundAudio.pause(); // Pause the background music
             }).catch(error => {
-                outputArea.textContent = "Error playing audio"; // Error message if play fails
+                outputArea.textContent = "Error playing audio: " + error.message; // Show error message
             });
         } else {
             outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
