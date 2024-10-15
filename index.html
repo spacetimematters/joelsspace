@@ -6,41 +6,23 @@
     <title>Joel's Space</title>
     <style>
         body {
-            margin: 0;
-            height: 100vh;
-            overflow: hidden; /* Prevent scrolling */
+            background-image: url('background.png'); /* Add your background image here */
+            background-size: cover; /* Scale the background image to cover the entire viewport */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            color: #2a892a;
             font-family: 'Inconsolata', monospace;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-        }
-
-        .background {
-            position: fixed; /* Position the background */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('background.png'); /* Background image */
-            background-size: cover; /* Scale background image */
-            background-position: center; /* Center background image */
-            background-repeat: no-repeat; /* Prevent repeating */
-            z-index: -1; /* Place it behind other elements */
-        }
-
-        .overlay {
-            position: fixed; /* Position the overlay */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
-            z-index: 0; /* Place it above the background */
+            height: 100vh;
+            margin: 0;
+            font-size: 11px; /* All text size set to 11px */
         }
 
         .demo-box {
             border: 2px solid #2a892a;
-            font-size: 11px; /* All text size set to 11px */
+            font-size: inherit;
             width: 400px;
             height: 300px;
             text-align: left;
@@ -50,7 +32,6 @@
             margin-top: 20px;
             margin-left: 20px;
             padding: 10px;
-            z-index: 1; /* Place it above the overlay */
         }
 
         #header {
@@ -106,8 +87,6 @@
 </head>
 <body>
 
-<div class="background"></div> <!-- Background Image -->
-<div class="overlay"></div> <!-- Dark Overlay -->
 <div class="demo-box">
     <div id="header">LullSoft Version 1.0.130</div>
     <div id="subheader"></div> <!-- Added subheader for 'Created by Space/J' -->
@@ -247,4 +226,26 @@
 
     function selectSong(songName) {
         const validSongs = ["swiffle", "home", "ohwell", "cemetery", "uncomfortable", "ambience"];
-        if (validSongs.includes(songName
+        if (validSongs.includes(songName)) {
+            audio.src = songName + ".mp3"; // Set the selected audio source
+            audio.play().then(() => {
+                outputArea.textContent = "Playing: " + songName; // Display play message
+                backgroundAudio.pause(); // Pause the background music
+            }).catch(error => {
+                outputArea.textContent = "Error playing audio"; // Error message if play fails
+            });
+        } else {
+            outputArea.textContent = "Please specify a valid song name."; // Prompt for valid song name
+        }
+    }
+
+    function adjustHeight() {
+        demoText.style.height = 'auto';
+        demoText.style.height = demoText.scrollHeight + 'px';
+    }
+
+    loadingAnimation();
+</script>
+
+</body>
+</html>
